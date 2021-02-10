@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="?attr/actionBarSize"
+    tools:context=".loginActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <EditText
+            android:id="@+id/user_name"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="100dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="60dp"
+            android:hint="请输入账号："
+            android:textSize="30sp"/>
+
+        <EditText
+            android:id="@+id/user_password"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_below="@id/user_name"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:hint="请输入密码："
+            android:textSize="30sp"/>
+
+        <TextView
+            android:id="@+id/set_passsword"
+            android:layout_width="140dp"
+            android:layout_height="40dp"
+            android:layout_below="@id/user_password"
+            android:layout_toLeftOf="@id/set_register"
+            android:text="忘记密码"
+            android:textSize="30sp"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true" />
+        <TextView
+            android:id="@+id/set_register"
+            android:layout_width="140dp"
+            android:layout_height="40dp"
+            android:layout_below="@id/user_password"
+            android:layout_alignRight="@id/user_password"
+            android:text="立即注册"
+            android:textSize="30sp"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <Button
+            android:id="@+id/user_login"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_below="@id/user_password"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="30dp"
+            android:layout_marginTop="100dp"
+            android:text="登录"
+            android:textSize="30sp"/>
+
+    </RelativeLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
