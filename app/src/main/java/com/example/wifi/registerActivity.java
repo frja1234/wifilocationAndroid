@@ -1,77 +1,63 @@
 package com.example.wifi;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.Spinner;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
+import com.example.wifi.Model.User;
+import com.example.wifi.Utils.http.HttpUserUtils;
+
+import java.util.Date;
 
 public class registerActivity extends AppCompatActivity implements View.OnClickListener {
-    private Spinner userAuthority;
-    private ArrayList<String> list1;
+    private HttpUserUtils userUtils = new HttpUserUtils();
+    private User user = new User();
+    private String userName;
+    private String userPassword;
+    private String userId;
+    private int authority;
+    private TextView tUserName;
+    private TextView tUserPassword;
+    private TextView tUserId;
+    private RadioButton userAuthority;
+    private RadioButton managerAuthority;
+    private Button register;
+
+
+    private boolean userIsChecked;
+    private boolean managerIsChecked;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        TextView tUserName = findViewById(R.id.user_register_name);
-        TextView tUserPassword = findViewById(R.id.user_register_password);
-        Button register = findViewById(R.id.user_register);
-        userAuthority = findViewById(R.id.userAuthority);
+        initView();
+        initData();
+
+
+    }
+    public void initView(){
+
+        userAuthority = findViewById(R.id.radio1);
+        tUserName = findViewById(R.id.user_register_name);
+        tUserPassword = findViewById(R.id.user_register_password);
+        tUserId = findViewById(R.id.user_register_id);
+        register = findViewById(R.id.user_register);
+        userAuthority = findViewById(R.id.radio1);
+        managerAuthority = findViewById(R.id.radio2);
+
+    }
+    public void initData(){
+
         register.setOnClickListener(this);
-        list1 = new ArrayList<>();
-        list1.add("Android");
-        list1.add("IOS");
-        list1.add("H5");
-        userAuthority.setAdapter(new MyAdapter());
-
-
-    }
-    private class MyAdapter extends BaseAdapter {
-
-        @Override
-        public int getCount() {
-            return list1.size();
-        }
-
-        @Override
-        public Object getItem(int i) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int i) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            RecyclerView.ViewHolder holder ;
-            if(convertView==null){
-                convertView = LayoutInflater.from(registerActivity.this).inflate(R.layout.activity_register, viewGroup, false);
-                holder = new RecyclerView.ViewHolder();
-                holder.itemText= (TextView) convertView.findViewById(R.id.item_text);
-                convertView.setTag(holder);
-            }else{
-                holder = (ViewHolder) convertView.getTag();
-            }
-            holder.itemText.setText(list2.get(position));
-            return convertView;
-        }
-
-    }
-
+        userIsChecked = userAuthority.isChecked();
+        managerIsChecked = managerAuthority.isChecked();
 
     }
 
@@ -81,21 +67,35 @@ public class registerActivity extends AppCompatActivity implements View.OnClickL
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.user_register :
+                userName = tUserName.getText().toString().trim();
+                userPassword = tUserPassword.getText().toString().trim();
+                userId = tUserId.getText().toString().trim();
+                if(userIsChecked)authority = 1;
+                else if(managerIsChecked)authority = 2;
+                user.setUserName(userName);
+                user.setPassword(userPassword);
+                user.setUserAuthority(authority);
+                user.setUserId(userId);
+                user.setCreateTime(new Date());
 
-                if (userName.length()<=0 ||userPassword.length()<=0)
+                System.out.println(user.toString());
+                if (user.toString().length()<=0)
                     Toast.makeText(this,"请正确输入",Toast.LENGTH_SHORT).show();
-                else
+                else{
 
-                if(userUtils.login(userName,userPassword)){
-                    Toast.makeText(this,"登录成功",Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                }else{
-                    Toast.makeText(this,"账号或密码错误",Toast.LENGTH_SHORT).show();
-                };
+                    if(userUtils.register(user)){
+                        Toast.makeText(this,"注册成功",Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }else{
+                        Toast.makeText(this,"注册失败",Toast.LENGTH_SHORT).show();
+                    };
 
-                break;
+                }
+
+
+
 
                 break;
         }

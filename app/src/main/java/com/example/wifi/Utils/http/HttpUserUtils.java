@@ -15,32 +15,24 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class UserUtils {
+public class HttpUserUtils {
     RequestBody requestBody;
     OkHttpClient okHttpClient;
     Internet internet;
     String res;
     //用户登录
     public Boolean login(String name, String password) {
-    //设置请求参数
-        System.out.println(name+password);
-        FormBody.Builder formBody = new FormBody.Builder();
-        System.out.println(name+password);
-        formBody.add("userName",name);
-        formBody.add("userPassword",password);
-
         okHttpClient = new OkHttpClient.Builder()
                 .connectTimeout(3000, TimeUnit.SECONDS)
                 .callTimeout(3000, TimeUnit.SECONDS)
                 .build();
-        requestBody = formBody.build();
         //Okhttp3同步请求 开启线程
         Thread thread =  new Thread() {
             @Override
             public void run() {
                 //设置请求的地址
                 Request request = new Request.Builder()
-                        .url("http://192.168.0.107:8888/wifilocation/user/login?userId="+name+"&userPassword="+password).get().build();
+                        .url("http://37533an013.wicp.vip/wifilocation/user/login?userId="+name+"&userPassword="+password).get().build();
                 Response response = null;
                 try {
                     //同步请求
@@ -91,7 +83,7 @@ public class UserUtils {
             public void run() {
                 //设置请求的地址
                 Request request = new Request.Builder()
-                        .url("http://192.168.0.107:8888/wifilocation/user/login?userId="+user.getUserId()+"&userName="+user.getUserName()+"&userAuthority="+user.getUserAuthority()+"&userPassword="+user.getPassword()).get().build();
+                        .url("http://192.168.0.110:8888/wifilocation/user/register?userId="+user.getUserId()+"&userName="+user.getUserName()+"&userAuthority="+user.getUserAuthority()+"&userPassword="+user.getPassword()+"&createTime="+user.getCreateTime()).get().build();
                 Response response = null;
                 try {
                     //同步请求

@@ -1,13 +1,36 @@
 package com.example.wifi.Model;
 
+import java.util.Date;
+
 public class User {
     private String userId;
 
     private String userName;
 
     private Integer userAuthority;
+
     private String password;
 
+    private Date createTime;
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId='" + userId + '\'' +
+                ", userName='" + userName + '\'' +
+                ", userAuthority=" + userAuthority +
+                ", password='" + password + '\'' +
+                ", createTime=" + createTime +
+                '}';
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
 
     public String getUserId() {
         return userId;
@@ -40,13 +63,5 @@ public class User {
     public void setPassword(String password) {
         this.password = password;
     }
-    @Override
-    public String toString() {
-        return "User{" +
-                "userId='" + userId + '\'' +
-                ", userName='" + userName + '\'' +
-                ", userAuthority=" + userAuthority +
-                ", password='" + password + '\'' +
-                '}';
-    }
+
 }

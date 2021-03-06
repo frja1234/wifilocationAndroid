@@ -13,15 +13,14 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.wifi.loginActivity;
 import com.example.wifi.R;
+import com.example.wifi.mapview.PinView;
 
 public class NotificationsFragment extends Fragment implements View.OnClickListener {
 
-    private NotificationsViewModel notificationsViewModel;
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        notificationsViewModel =
-                new ViewModelProvider(this).get(NotificationsViewModel.class);
+
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         View root = inflater.inflate(R.layout.fragment_set, container, false);
         final Button register = root.findViewById(R.id.register);
         register.setOnClickListener(this);

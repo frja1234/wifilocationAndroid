@@ -11,30 +11,56 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
         <com.example.wifi.mapview.PinView
+            android:id="@+id/mapImageView"
             android:layout_width="match_parent"
             android:layout_height="200dp"/>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:orientation="horizontal">
-
             <EditText
                 android:layout_width="100dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="当前位置" />
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="X:" />
 
             <EditText
+                android:id="@+id/mapX"
                 android:layout_width="100dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="x：" />
+                />
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Y:" />
 
             <EditText
+                android:id="@+id/mapY"
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="步长:" />
+            <EditText
+                android:id="@+id/mapStep"
                 android:layout_width="100dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="y：" />
+                />
         </LinearLayout>
 
         <LinearLayout

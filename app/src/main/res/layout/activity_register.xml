@@ -45,12 +45,22 @@
             android:layout_marginRight="30dp"
             android:hint="请再次输入密码："
             android:textSize="30sp"/>
-        <Spinner
-            android:id="@+id/userAuthority"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
 
+        <RadioButton
+            android:id="@+id/radio1"
+            android:layout_width="wrap_content"
+            android:layout_alignBaseline="@id/radio2"
+            android:layout_toLeftOf="@id/radio2"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="用户" />
+        <RadioButton
+            android:id="@+id/radio2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/user_register_again_password"
+            android:layout_alignRight="@id/user_register_again_password"
+            android:text="管理员"/>
 
         <Button
             android:id="@+id/user_register"

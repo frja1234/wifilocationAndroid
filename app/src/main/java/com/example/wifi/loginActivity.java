@@ -9,23 +9,12 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.wifi.Model.User;
-import com.example.wifi.Utils.http.UserUtils;
-import com.google.gson.Gson;
-
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
-
-import okhttp3.FormBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
+import com.example.wifi.Utils.http.HttpUserUtils;
 
 public class loginActivity extends AppCompatActivity implements View.OnClickListener {
     private TextView tUserName;
     private TextView tUserPassword;
-    private UserUtils userUtils = new UserUtils();
+    private HttpUserUtils userUtils = new HttpUserUtils();
 
 
     @Override

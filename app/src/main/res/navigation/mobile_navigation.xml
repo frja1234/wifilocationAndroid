@@ -15,7 +15,7 @@
         android:id="@+id/navigation_dashboard"
         android:name="com.example.wifi.ui.test.DashboardFragment"
         android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_test" />
+        tools:layout="@layout/fragment_location" />
 
     <fragment
         android:id="@+id/navigation_notifications"
