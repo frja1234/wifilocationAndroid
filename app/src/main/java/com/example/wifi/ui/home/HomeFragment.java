@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.PointF;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,28 +19,31 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.example.wifi.Model.FingerPrint;
+import com.example.wifi.Model.wifi.Wifi;
+import com.example.wifi.Model.wifi.WifiApList;
 import com.example.wifi.Model.wifi.WifiMap;
 import com.example.wifi.Model.wifi.WifiSignal;
+import com.example.wifi.Model.wifi.WifiMessageList;
 import com.example.wifi.R;
 import com.example.wifi.Utils.Logger;
 import com.example.wifi.Utils.http.HttpWifiUtils;
 import com.example.wifi.Utils.wifi.WifiUtils;
+import com.example.wifi.WifiApAdapter;
+import com.example.wifi.WifiMessageAdapter;
 import com.example.wifi.mapview.PinView;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -55,18 +57,28 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private WifiUtils wifiTool;
     private Button BCollect;
     private Button BLoadMap;
+    private Button BWifiMessage;
+    private Button BWIfiAp;
     private TextView textViewX;
     private TextView textViewY;
     private TextView textViewStep;
+    private ListView wifiList;
     private WifiMap wifiMap = new WifiMap();
     private WifiSignal wifiSignal = new WifiSignal();
     private HttpWifiUtils httpWifiUtils = new HttpWifiUtils();
+    private ArrayList<WifiMessageList> wifiListData = new ArrayList<>();
+    private ArrayList<WifiApList> wifiApListData = new ArrayList<>();
 
     private static final String TAG = "MainActivity";
 
     private static final int DEFAULT_TRAIN_TIME = 6000;
     private static final int REQUEST_PICK_MAP = 1;
     private static final int REQUEST_PERMISSION_CODE = 2;
+
+    private static final String MAP_INFO = "map_info";
+    private static final String MAP_PATH = "map_path";
+    private static final String MAP_WIDTH = "width";
+    private static final String MAP_height = "height";
 
 
 
@@ -75,20 +87,27 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         mapView = root.findViewById(R.id.mapImageView);
         BCollect = root.findViewById(R.id.collect);
         BLoadMap = root.findViewById(R.id.loadmap);
+        BWifiMessage = root.findViewById(R.id.wifimessage);
+        BWIfiAp = root.findViewById(R.id.wifiPointStore);
         textViewX = root.findViewById(R.id.mapX);
         textViewY = root.findViewById(R.id.mapY);
         textViewStep = root.findViewById(R.id.mapStep);
+        wifiList = root.findViewById(R.id.wifiList);
         textViewX.addTextChangedListener(textWatcher);
         textViewY.addTextChangedListener(textWatcher);
         textViewStep.addTextChangedListener(textWatcher);
+        wifiTool = new WifiUtils(getActivity());
         BCollect.setOnClickListener(this);
         BLoadMap.setOnClickListener(this);
+        BWifiMessage.setOnClickListener(this);
+        BWIfiAp.setOnClickListener(this);
         try {
             if (!tryLoadOldMap())
                 selectMapFromPhone();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        getWifiApMessage();
         return root;
     }
 
@@ -98,30 +117,64 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             //采集
             case R.id.collect:
                 wifiTool = new WifiUtils(getActivity());
-                wifiMap.setWifiMapX(textViewX.getText().toString().trim());
-                wifiMap.setWifiMapY(textViewY.getText().toString().trim());
-                wifiSignal = wifiTool.collect(wifiMap);
-                System.out.println(wifiSignal.toString());
-                httpWifiUtils.wifiPointStore(wifiSignal);
+                String X = textViewX.getText().toString().trim();
+                String Y = textViewY.getText().toString().trim();
+                Wifi wifi = wifiTool.wifiCollect(X,Y);
+                System.out.println(wifi);
+                httpWifiUtils.wifiPointStore(wifi);
+                saveFingerprintData(wifi);
                 System.out.println("sdb");
                 break;
-            //更新
-            case R.id.update:
-
             case R.id.loadmap:
                 selectMapFromPhone();
-
+                break;
+            case R.id.wifimessage:
+                getWifiMessage();
+                break;
+            case R.id.wifiPointStore:
+                getWifiApMessage();
                 break;
         }
     }
+
+    //获取WiFi数据
+    private void getWifiMessage(){
+        wifiListData.clear();
+        wifiTool = new WifiUtils(getActivity());
+        WifiMessageList wifiListFirst = new WifiMessageList("id","name","level");
+        wifiListData.add(wifiListFirst);
+        for(WifiMessageList wifilist : wifiTool.getWifiListData()){
+            wifiListData.add(wifilist);
+        }
+        // 先拿到数据并放在适配器上
+        WifiMessageAdapter adapter=new WifiMessageAdapter(getActivity(),R.layout.wifi_message_item,wifiListData);
+        wifiList.setAdapter(adapter);
+    }
+
+    //获取该点指纹
+    public void getWifiApMessage(){
+        wifiApListData.clear();
+        WifiApList wifiApList = new WifiApList();
+        String X = textViewX.getText().toString().trim();
+        String Y = textViewY.getText().toString().trim();
+        Wifi wifi = httpWifiUtils.getWifiAp(new WifiMap(X,Y));
+        System.out.println(wifi);
+        wifiApList.setAp1(wifi.getAp1());
+        wifiApList.setAp2(wifi.getAp2());
+        wifiApList.setAp3(wifi.getAp3());
+        wifiApList.setAp4(wifi.getAp4());
+        wifiApList.setCreateTime(wifi.getCreateTime());
+        wifiApListData.add(wifiApList);
+        WifiApAdapter adapter=new WifiApAdapter(getActivity(),R.layout.wifi_ap_item,wifiApListData);
+        wifiList.setAdapter(adapter);
+    }
+
+
     private void showToast(String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
 
-    private static final String MAP_INFO = "map_info";
-    private static final String MAP_PATH = "map_path";
-    private static final String MAP_WIDTH = "width";
-    private static final String MAP_height = "height";
+
     //导入以前的地图
     private boolean tryLoadOldMap() throws IOException {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(MAP_INFO, MODE_PRIVATE);
@@ -178,14 +231,15 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 if (textViewStep.getText().toString().trim().equals("")) {
                     showToast("Stride length can't be null");
                 } else {
-                    float strideLength = Float.valueOf(textViewStep.getText().toString());
+                    float strideLength = Float.valueOf(textViewStep.getText().toString().trim());
                     mapView.setStride(strideLength);
                 }
             } else if (ifUserInput) {
                 if (!textViewX.getText().toString().equals("") && !textViewY.getText().toString().equals("")) {
-                    PointF p = new PointF(Float.valueOf(textViewX.getText().toString()),
-                            Float.valueOf(textViewY.getText().toString()));
+                    PointF p = new PointF(Float.valueOf(textViewX.getText().toString().trim()),
+                            Float.valueOf(textViewY.getText().toString().trim()));
                     mapView.setCurrentTPosition(p);
+                    getWifiApMessage();
                 }
             }
         }
@@ -205,7 +259,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     }
     //选择地图
     public void selectMapFromPhone() {
-        showToast("Please choose a image.");
+        showToast("选择一张图片.");
         Intent pickPhoto = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(pickPhoto, REQUEST_PICK_MAP);  //one can be replaced with any action code
@@ -250,8 +304,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                //float width = mapView.getWidth();
+                //float height = mapView.getHeight();
                 float width = Float.valueOf(editMapWidth.getText().toString().trim());
-                float height = Float.valueOf(editMapHeight.getText().toString().trim());
+               float height = Float.valueOf(editMapHeight.getText().toString().trim());
                 saveMapInfo(selectedImage, width, height);
                 System.out.println(width+height);
                 try {
@@ -274,7 +330,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         builder.show();
     }
     //更新收集状态
-    private void updateCollectStatus(final FingerPrint fingerprint) {
+    private void updateCollectStatus(final WifiMap fingerprint) {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -283,6 +339,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 mapView.addFingerprintPoint(fingerprint);//标注该点
             }
         });
+    }
+
+    //保存点击数据
+    private void saveFingerprintData(final Wifi wifiData) {
+        PointF pos = mapView.getCurrentTCoord();
+        WifiMap fingerprint = new WifiMap(String.valueOf(pos.x), String.valueOf(pos.y));
+        updateCollectStatus(fingerprint);
+        Logger.saveFingerprintData("0", wifiData);
     }
 
     private static int getPowerOfTwoForSampleRatio(double ratio){
@@ -298,8 +362,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             mapView.setImage(ImageSource.bitmap(bitmap));
             mapView.initialCoordManager(width, height);
             mapView.setCurrentTPosition(new PointF(1.0f, 1.0f)); //initial current position
-            textViewX.setText(String.format(Locale.ENGLISH, "X(max:%.1f)", width));
-            textViewX.setText(String.format(Locale.ENGLISH, "Y(max:%.1f)", height));
+            //textViewX.setText(String.format(Locale.ENGLISH, "X(max:%.1f)", width));
+            //textViewY.setText(String.format(Locale.ENGLISH, "Y(max:%.1f)", height));
             checkFinishedPoints();
             setGestureDetectorListener(true);
     }
@@ -341,6 +405,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         textViewX.setText(String.format(Locale.ENGLISH, "%.2f", mapView.getCurrentTCoord().x));
         textViewY.setText(String.format(Locale.ENGLISH, "%.2f", mapView.getCurrentTCoord().y));
+        getWifiApMessage();
 
         ifUserInput = true;
     }

@@ -8,10 +8,11 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="300dp">
+            android:layout_height="200dp">
             <ImageView
                 android:id="@+id/user_image"
                 android:layout_width="100dp"
@@ -22,12 +23,48 @@
                 android:id="@+id/register"
                 android:layout_width="180dp"
                 android:layout_height="60dp"
-                android:text="立即注册"
+                android:text="立即登录"
                 android:textSize="30sp"
                 android:layout_toRightOf="@id/user_image"
                 android:layout_marginTop="60dp"
                 />
         </RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#201F1F"/>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:text="选择wifi指纹"
+                android:textSize="20sp"
+                android:gravity="center_vertical" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0.1dp"
+                android:background="#716363"/>
+            <TextView
+                android:id="@+id/selectWifiPoint"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:text="选择wifi指纹"
+                android:textSize="20sp"
+                android:gravity="center_vertical" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0.1dp"
+                android:background="#716363"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:text="选择wifi指纹"
+                android:textSize="20sp"
+                android:gravity="center_vertical" />
+        </LinearLayout>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

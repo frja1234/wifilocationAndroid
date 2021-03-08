@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.example.wifi.Model.FingerPrint;
+import com.example.wifi.Model.wifi.WifiMap;
 import com.example.wifi.R;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,8 +27,6 @@ public class PinView extends SubsamplingScaleImageView {
 
     private Bitmap currentPin;
     private Bitmap completedPin;
-    private Bitmap beaconPin;
-
     private CoordManager coordManager;
 
     public PinView(Context context) {
@@ -50,16 +49,16 @@ public class PinView extends SubsamplingScaleImageView {
         currentPin = Bitmap.createScaledBitmap(currentPin, (int) w, (int) h, true);
 
         completedPin = BitmapFactory.decodeResource(this.getResources(), R.drawable.completed_point);
-        w = (density / 6000) * completedPin.getWidth();
+        w = (density / 6000f) * completedPin.getWidth();
         h = (density / 6000f) * completedPin.getHeight();
         completedPin = Bitmap.createScaledBitmap(completedPin, (int) w, (int) h, true);
     }
 
-    public void addFingerprintPoint(FingerPrint f) {
+    public void addFingerprintPoint(WifiMap f) {
         if (fingerprintPoints == null)
             fingerprintPoints = new LinkedList<>();
 
-        this.fingerprintPoints.add(coordManager.tCoordToSCoord(new PointF(f.getX(), f.getY())));
+        this.fingerprintPoints.add(coordManager.tCoordToSCoord(new PointF(Float.parseFloat(f.getWifiMapX()), Float.parseFloat(f.getWifiMapY()))));
         invalidate();
     }
 

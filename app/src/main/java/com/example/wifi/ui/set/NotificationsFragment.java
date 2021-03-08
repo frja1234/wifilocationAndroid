@@ -35,9 +35,6 @@ public class NotificationsFragment extends Fragment implements View.OnClickListe
                 Intent intent = new Intent(getActivity().getApplicationContext(), loginActivity.class);
                 startActivity(intent);
                 break;
-            //更新
-            case R.id.update:
-                break;
         }
     }
 }

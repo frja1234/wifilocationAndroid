@@ -12,6 +12,11 @@ public class WifiMap {
         System.out.println(wifiMapX+wifiMapY);
     }
 
+    public WifiMap(String wifiMapX,String wifiMapY){
+        this.wifiMapX = wifiMapX;
+        this.wifiMapY = wifiMapY;
+    }
+
     public String getWifiMapY() {
         return wifiMapY;
     }

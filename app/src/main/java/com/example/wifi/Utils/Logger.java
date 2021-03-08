@@ -3,6 +3,7 @@ package com.example.wifi.Utils;
 import android.graphics.PointF;
 import android.os.Environment;
 
+import com.example.wifi.Model.wifi.Wifi;
 import com.example.wifi.Model.wifi.WifiAp;
 import com.example.wifi.Model.wifi.WifiSignal;
 
@@ -23,38 +24,35 @@ public class Logger {
     private static String TAG = "Logger";
 
     private static String getRootDir() {
+        System.out.println(Environment.getExternalStorageDirectory()+"123");
         return Environment.getExternalStorageDirectory() + "/wifiLocation";
     }
 
-    public static void saveFingerprintData(String type, WifiSignal wifiSignal) {
+    public static void saveFingerprintData(String type, Wifi wifi) {
         List<String> data = new LinkedList<>();
-
-        for (WifiAp ap : wifiSignal.getAp()) {
-            data.add(String.format(Locale.ENGLISH, "%s %s %s", ap.getWifiName(), ap.getWifiBssid(), ap.getWifiRssi()));
-        }
-
-        String firstLine = String.format(Locale.ENGLISH, "%.2f %.2f %d %s", wifiSignal.getWifiPoint().getWifiMap().getWifiMapX(), wifiSignal.getWifiPoint().getWifiMap().getWifiMapY(), data.size()
-                ,getTimeStamp());
+        data.add(String.format(Locale.ENGLISH, "%s %s %s %s %s %s %s", wifi.getMapX(),wifi.getMapY(),wifi.getAp1(), wifi.getAp2(), wifi.getAp3(),wifi.getAp4(),wifi.getCreateTime()));
 
         String rootPath = getRootDir();
-        String filePath = rootPath + "/" + type + getDateUnderLine() + ".txt";
+        String filePath = rootPath + "/" + type + getTimeStamp() + ".txt";
 
         try {
-            File dir = new File(filePath);
-            dir.getParentFile().mkdirs();
+            File dir = new File(rootPath);
+            if(!dir.exists()){
+                System.out.println("文件夹不存在");
+                dir.mkdir();
+            }
+            File file = new File(filePath);
+            if(!file.exists()){
+                System.out.println("文件不存在");
+                file.createNewFile();
+            }
+            //dir.getParentFile().mkdirs();//创建文件夹
             //not use "+"http://37533an013.wicp.vip
             //<<Effective Java>> 51
             StringBuilder sb = new StringBuilder();
-            sb.append(firstLine).append("\r\n");
-
-            for (String str : data) {
-                sb.append(str).append("\r\n");
-            }
-            sb.append("\r\n");
-
             FileWriter fw = new FileWriter(filePath, true);
             try {
-                fw.write(sb.toString());
+                fw.write(data.toString().replace("[","").replace("]","")+"\n");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -67,7 +65,7 @@ public class Logger {
 
     public static List<PointF> getCollectedGrid(String type) {
         String rootPath = getRootDir();
-        String filePath = rootPath + "/" + type + getDateUnderLine() + ".txt";
+        String filePath = rootPath + "/" + type + getTimeStamp() + ".txt";
 
         List<PointF> result = new ArrayList<>();
 
@@ -82,6 +80,8 @@ public class Logger {
         try {
             String line = in.readLine();
             while (line != null) {
+
+                System.out.println(line);
                 if (!line.trim().equals("")) { //no blank line
                     if (!line.contains("|")) {
                         String[] attr = line.split(" ");
@@ -108,7 +108,7 @@ public class Logger {
     }
 
     private static String getTimeStamp() {
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Date curDate = new Date(System.currentTimeMillis());
         return formatter.format(curDate);
     }
