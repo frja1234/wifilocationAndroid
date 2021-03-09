@@ -28,11 +28,16 @@ public class WifiUtils {
     // 扫描出的网络连接列表
     private List<ScanResult> mWifiList;
     //
+    private ArrayList<String> wifiNameList = new ArrayList<>();
 
 
 
     // 构造器
     public WifiUtils(Context context) {
+        wifiNameList.add("CT-Young");
+        wifiNameList.add("NIT-WIFI");
+        wifiNameList.add("皮卡丘");
+        wifiNameList.add("NIT—WIFI");
         // 取得WifiManager对象
         mWifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         // 取得WifiInfo对象
@@ -75,11 +80,7 @@ public class WifiUtils {
     }
 
     public Wifi wifiCollect(String X,String Y){
-        ArrayList<String> wifiNameList = new ArrayList<>();
-        wifiNameList.add("CT-Young");
-        wifiNameList.add("NIT-WIFI");
-        wifiNameList.add("皮卡丘");
-        wifiNameList.add("NIT—WIFI");
+
         StringBuilder wifiId = new StringBuilder();
         int x = Integer.parseInt(X.replace(".00",""));
         int y = Integer.parseInt(Y.replace(".00",""));
@@ -102,9 +103,22 @@ public class WifiUtils {
                 wifi.setAp3(scanResult.level);
             if(scanResult.SSID.equals(wifiNameList.get(3)))
                 wifi.setAp4(scanResult.level);
-            System.out.println(scanResult.SSID);
         }
 
+        return wifi;
+    }
+    public Wifi locationScan(){
+        Wifi wifi = new Wifi();
+        for(ScanResult scanResult :mWifiList){
+            if(scanResult.SSID.equals(wifiNameList.get(0)))
+                wifi.setAp1(-scanResult.level);
+            if(scanResult.SSID.equals(wifiNameList.get(1)))
+                wifi.setAp2(-scanResult.level);
+            if(scanResult.SSID.equals(wifiNameList.get(2)))
+                wifi.setAp3(-scanResult.level);
+            if(scanResult.SSID.equals(wifiNameList.get(3)))
+                wifi.setAp4(-scanResult.level);
+        }
         return wifi;
     }
 

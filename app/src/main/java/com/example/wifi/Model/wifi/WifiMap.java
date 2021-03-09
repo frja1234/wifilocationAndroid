@@ -35,7 +35,7 @@ public class WifiMap {
 
     @Override
     public String toString() {
-        return "WifiMapPoint{" +
+        return "{" +
                 "wifiMapX='" + wifiMapX + '\'' +
                 ", wifiMapY='" + wifiMapY + '\'' +
                 '}';

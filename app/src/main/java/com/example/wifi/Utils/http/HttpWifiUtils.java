@@ -26,6 +26,7 @@ public class HttpWifiUtils {
     OkHttpClient okHttpClient;
     Internet internet;
     Wifi wifi;
+    WifiMap wifiMap;
     String res;
     String url = "http://37533an013.wicp.vip/wifilocation/wifi/",wifiUrl;
 
@@ -87,10 +88,11 @@ public class HttpWifiUtils {
             return false;
     }
     //wifi定位
-    public Boolean wifiLocation(Wifi wifi) {
+    public WifiMap wifiLocation(Wifi wifi) {
         // 构建请求参数
         Gson gson = new Gson();
         String json = gson.toJson(wifi);
+        wifiUrl = url + "wifiLocation";
         RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), json);
         okHttpClient = new OkHttpClient.Builder()
                 .connectTimeout(3000, TimeUnit.SECONDS)
@@ -102,7 +104,7 @@ public class HttpWifiUtils {
             public void run() {
                 //设置请求的地址
                 Request request = new Request.Builder()
-                        .url("http://192.168.0.107:8888/wifiLocation/wifi/wifiLocation").post(body).build();
+                        .url(wifiUrl).post(body).build();
                 Response response = null;
                 try {
                     //同步请求
@@ -114,9 +116,11 @@ public class HttpWifiUtils {
                         System.out.println(res);
                         Gson gson = new Gson();
                         internet = gson.fromJson(res,Internet.class);
-                        WifiMap wifiMap = gson.fromJson(internet.getData(),WifiMap.class);
+                        wifiMap = gson.fromJson(internet.getData(),WifiMap.class);
                         System.out.println(internet.toString()+"返回的信息");
                         System.out.println(wifiMap.toString()+"返回的信息");
+                        return;
+
                     } else{
                         System.out.println("服务器连接失败");
                         return;
@@ -136,9 +140,9 @@ public class HttpWifiUtils {
         }
         //判断密码是否正确 正确后进行跳转
         if (internet.getCode().equals("200")){
-            return true;
+            return wifiMap;
         }else
-            return false;
+            return new WifiMap();
     }
     //获取该点指纹
     public Wifi getWifiAp(WifiMap wifiMap){

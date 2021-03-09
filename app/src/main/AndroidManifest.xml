@@ -29,6 +29,7 @@
         <activity android:name=".wifiItemActivity" />
         <activity android:name=".registerActivity" />
         <activity android:name=".loginActivity" />
+        <receiver android:name=".ui.test.DashboardFragment$MyReceiver"/>
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name">
@@ -42,7 +43,9 @@
             </intent-filter>
         </activity>
 
-        <service android:name=".WifiService" />
+        <service android:name=".WifiService"
+            android:enabled="true"
+            android:exported="true"/>
     </application>
 
 </manifest>
