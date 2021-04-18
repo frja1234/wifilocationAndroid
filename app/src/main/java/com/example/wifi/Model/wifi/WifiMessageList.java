@@ -8,10 +8,13 @@ public class WifiMessageList {
 
     private String level;
 
-    public WifiMessageList(String id, String name, String level){
-        this.id = id;
+    private boolean isUse;
+
+    public WifiMessageList(String id, String name, String level,boolean isUse){
+        this.id =id;
         this.name = name;
         this.level = level;
+        this.isUse = isUse;
     }
 
     public String getId() {
@@ -38,12 +41,21 @@ public class WifiMessageList {
         this.level = level;
     }
 
+    public boolean isUse() {
+        return isUse;
+    }
+
+    public void setUse(boolean use) {
+        isUse = use;
+    }
+
     @Override
     public String toString() {
-        return "wifiList{" +
-                "id=" + id +
+        return "WifiMessageList{" +
+                "id='" + id + '\'' +
                 ", name='" + name + '\'' +
-                ", level=" + level +
+                ", level='" + level + '\'' +
+                ", isUse=" + isUse +
                 '}';
     }
 }

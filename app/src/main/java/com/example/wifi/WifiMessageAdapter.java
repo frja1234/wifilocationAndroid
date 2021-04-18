@@ -5,14 +5,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.example.wifi.Model.wifi.WifiMessageList;
+import com.google.android.material.checkbox.MaterialCheckBox;
 
 import java.util.List;
 
-public class WifiMessageAdapter extends ArrayAdapter<WifiMessageList> {
+public class WifiMessageAdapter extends ArrayAdapter<WifiMessageList> implements View.OnClickListener {
     private int resourceId;
+
 
     // 适配器的构造函数，把要适配的数据传入这里
     public WifiMessageAdapter(Context context, int textViewResourceId, List<WifiMessageList> objects){
@@ -38,6 +41,7 @@ public class WifiMessageAdapter extends ArrayAdapter<WifiMessageList> {
             viewHolder.id=view.findViewById(R.id.wifiListId);
             viewHolder.name=view.findViewById(R.id.wifiListName);
             viewHolder.level=view.findViewById(R.id.wifiListLevel);
+            viewHolder.isUse = view.findViewById(R.id.wifiListIsUser);
 
             // 将ViewHolder存储在View中（即将控件的实例存储在其中）
             view.setTag(viewHolder);
@@ -50,7 +54,19 @@ public class WifiMessageAdapter extends ArrayAdapter<WifiMessageList> {
         viewHolder.id.setText(wifilist.getId());
         viewHolder.name.setText(wifilist.getName());
         viewHolder.level.setText(wifilist.getLevel());
+        viewHolder.isUse.setOnClickListener(this);
         return view;
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.wifiListIsUser:
+
+                break;
+        }
+
     }
 
     // 定义一个内部类，用于对控件的实例进行缓存
@@ -58,5 +74,7 @@ public class WifiMessageAdapter extends ArrayAdapter<WifiMessageList> {
         TextView id;
         TextView name;
         TextView level;
+        //RadioButton isUse;
+        MaterialCheckBox isUse;
     }
 }

@@ -74,14 +74,6 @@
                 android:textSize="10sp"
                 android:text="采集"/>
             <Button
-                android:id="@+id/loadmap"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_margin="2dp"
-                android:textSize="10sp"
-                android:text="导入地图"/>
-            <Button
                 android:id="@+id/wifimessage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -90,13 +82,21 @@
                 android:textSize="10sp"
                 android:text="wifi信息"/>
             <Button
-                android:id="@+id/wifiPointStore"
+                android:id="@+id/loadmap"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:layout_margin="2dp"
                 android:textSize="10sp"
-                android:text="wifi指纹"/>
+                android:text="导入地图"/>
+            <Button
+                android:id="@+id/selectMap"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_margin="2dp"
+                android:textSize="10sp"
+                android:text="选择地图"/>
         </LinearLayout>
         <ListView
             android:id="@+id/wifiList"

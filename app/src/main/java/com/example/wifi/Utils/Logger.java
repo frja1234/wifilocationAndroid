@@ -4,8 +4,6 @@ import android.graphics.PointF;
 import android.os.Environment;
 
 import com.example.wifi.Model.wifi.Wifi;
-import com.example.wifi.Model.wifi.WifiAp;
-import com.example.wifi.Model.wifi.WifiSignal;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -38,18 +36,34 @@ public class Logger {
         try {
             File dir = new File(rootPath);
             if(!dir.exists()){
-                System.out.println("文件夹不存在");
+                System.out.println("文件夹存在");
                 dir.mkdir();
-            }
-            File file = new File(filePath);
-            if(!file.exists()){
+                BufferedReader in = new BufferedReader(new FileReader(filePath));
+                try {
+                    String line = in.readLine();
+                    while (line != null) {
+                        System.out.println(line);
+                        if (!line.trim().equals("")) { //no blank line
+                            if (!line.contains("|")) {
+                                String[] attr = line.split(" ");
+                                if(attr[0].equals(wifi.getMapX())&&attr[1].equals(wifi.getMapY())){
+                                    data.add(String.format(Locale.ENGLISH, "%s %s %s %s %s %s %s", wifi.getMapX(),wifi.getMapY(),wifi.getAp1(), wifi.getAp2(), wifi.getAp3(),wifi.getAp4(),wifi.getCreateTime()));
+
+                                }
+                            }
+                        }
+                        line = in.readLine();
+                    }
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }else{
                 System.out.println("文件不存在");
-                file.createNewFile();
+                dir.createNewFile();
             }
-            //dir.getParentFile().mkdirs();//创建文件夹
-            //not use "+"http://37533an013.wicp.vip
-            //<<Effective Java>> 51
-            StringBuilder sb = new StringBuilder();
+            //StringBuilder sb = new StringBuilder();
             FileWriter fw = new FileWriter(filePath, true);
             try {
                 fw.write(data.toString().replace("[","").replace("]","")+"\n");

@@ -2,7 +2,6 @@ package com.example.wifi.mapview;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -10,12 +9,9 @@ import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.View;
 
-import com.davemorrissey.labs.subscaleview.ImageSource;
-import com.example.wifi.R;
 
 import java.util.ArrayList;
 import java.util.List;
